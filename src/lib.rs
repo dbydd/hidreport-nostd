@@ -1572,6 +1572,7 @@ mod tests {
                 unit: None,
                 unit_exponent: None,
                 collections: vec![],
+                is_relative: false,
             }
         };
 
