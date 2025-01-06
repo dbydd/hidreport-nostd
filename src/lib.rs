@@ -40,10 +40,15 @@
 //! In this document and unless stated otherwise, a reference to "Section a.b.c" refers to the
 //! [HID Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111).
 
-use std::hash::{Hash, Hasher};
-use std::ops::Range;
-use thiserror::Error;
+#![no_std]
+#![feature(new_range_api, allocator_api)]
 
+extern crate alloc;
+
+use core::{hash::Hasher, ops::Range};
+
+use alloc::vec::Vec;
+use alloc::{string::String, vec};
 #[cfg(feature = "hut")]
 use hut::{AsUsage, AsUsagePage};
 
@@ -52,6 +57,7 @@ pub mod types;
 
 pub use hid::CollectionItem as CollectionType;
 use hid::*;
+use thiserror_no_std::Error;
 pub use types::*;
 
 macro_rules! ensure {
@@ -985,11 +991,11 @@ impl PartialEq for Collection {
 
 impl Eq for Collection {}
 
-impl Hash for Collection {
-    fn hash<H: Hasher>(&self, state: &mut H) {
-        self.id.hash(state);
-    }
-}
+// impl Hash for Collection {
+//     fn hash<H: Hasher>(&self, state: &mut H) {
+//         self.id.hash(state);
+//     }
+// }
 
 #[derive(Error, Debug)]
 pub enum ParserError {
@@ -1001,7 +1007,7 @@ pub enum ParserError {
     MismatchingReportId,
 }
 
-type Result<T> = std::result::Result<T, ParserError>;
+type Result<T> = core::result::Result<T, ParserError>;
 
 #[derive(Clone, Copy, Debug, Default)]
 struct Globals {

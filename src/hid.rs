@@ -31,10 +31,13 @@
 use crate::types::*;
 use crate::{ensure, ParserError};
 
-use thiserror::Error;
-
+use alloc::borrow::ToOwned;
+use alloc::format;
+use alloc::string::String;
+use alloc::vec::Vec;
 #[cfg(feature = "hut")]
 use hut;
+use thiserror_no_std::Error;
 
 /// Convenience function to be extract a single bit as bool from a value
 fn bit(bits: u32, bit: u8) -> bool {
@@ -72,7 +75,7 @@ pub enum HidError {
     InsufficientData,
 }
 
-type Result<T> = std::result::Result<T, HidError>;
+type Result<T> = core::result::Result<T, HidError>;
 
 /// The type of a HID item may be one of [MainItem], [GlobalItem], or [LocalItem].
 /// These items comprise the report descriptor and how the report descriptor should
@@ -998,7 +1001,7 @@ pub struct ItemData<'a> {
     bytes: &'a [u8],
 }
 
-impl<'a> std::ops::Deref for ItemData<'a> {
+impl<'a> core::ops::Deref for ItemData<'a> {
     type Target = [u8];
 
     fn deref(&self) -> &Self::Target {
@@ -1082,7 +1085,7 @@ pub struct ReportDescriptorItems {
     items: Vec<ReportDescriptorItem>,
 }
 
-impl std::ops::Deref for ReportDescriptorItems {
+impl core::ops::Deref for ReportDescriptorItems {
     type Target = [ReportDescriptorItem];
 
     fn deref(&self) -> &Self::Target {
