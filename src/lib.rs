@@ -49,9 +49,6 @@ use core::{hash::Hasher, ops::Range};
 
 use alloc::vec::Vec;
 use alloc::{string::String, vec};
-#[cfg(feature = "hut")]
-use hut::{AsUsage, AsUsagePage};
-
 pub mod hid;
 pub mod types;
 
@@ -476,15 +473,6 @@ impl From<&Usage> for UsageMaximum {
 }
 
 impl_from_without_ref!(Usage, UsageMaximum, UsageMaximum);
-
-#[cfg(feature = "hut")]
-impl From<hut::Usage> for Usage {
-    fn from(usage: hut::Usage) -> Usage {
-        let usage_page = UsagePage::from(usage.usage_page_value());
-        let usage_id = UsageId::from(usage.usage_id_value());
-        Usage::from_page_and_id(usage_page, usage_id)
-    }
-}
 
 /// A unique (within this report descriptor) identifier for a [Field].
 ///

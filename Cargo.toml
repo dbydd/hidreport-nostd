@@ -12,10 +12,8 @@ exclude = [
 ]
 
 [features]
-default = ["hut"]
-hut = [ "dep:hut" ]
+default = []
 
 
 [dependencies]
 thiserror-no-std="2.0.2"
-hut = { version = "0.3.0", optional = true }

@@ -10,9 +10,6 @@ use crate::TwosComplement;
 use alloc::vec;
 use alloc::vec::Vec;
 use alloc::{format, string::String};
-#[cfg(feature = "hut")]
-use hut::{self, AsUsage, AsUsagePage};
-
 /// Creates a `From<Foo> for u32` and `From<u32> for Foo` implementation for the given `Foo` type.
 /// Use like this: `impl_from(Foo, Foo, u32)`.
 macro_rules! impl_from {
@@ -64,34 +61,6 @@ pub struct UsagePage(pub(crate) u16);
 
 impl_from!(UsagePage, UsagePage, u16);
 impl_fmt!(UsagePage, u16);
-
-#[cfg(feature = "hut")]
-impl From<&hut::UsagePage> for UsagePage {
-    fn from(hut: &hut::UsagePage) -> UsagePage {
-        UsagePage(hut.usage_page_value())
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<hut::UsagePage> for UsagePage {
-    fn from(hut: hut::UsagePage) -> UsagePage {
-        UsagePage(hut.usage_page_value())
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<&hut::Usage> for UsagePage {
-    fn from(hut: &hut::Usage) -> UsagePage {
-        UsagePage(hut.usage_page_value())
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<hut::Usage> for UsagePage {
-    fn from(hut: hut::Usage) -> UsagePage {
-        UsagePage::from(&hut)
-    }
-}
 
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct LogicalMinimum(pub(crate) i32);
@@ -473,21 +442,6 @@ pub struct UsageId(pub(crate) u16);
 
 impl_from!(UsageId, UsageId, u16);
 impl_fmt!(UsageId, u16);
-
-#[cfg(feature = "hut")]
-impl From<&hut::Usage> for UsageId {
-    fn from(hut: &hut::Usage) -> UsageId {
-        UsageId(hut.usage_id_value())
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<hut::Usage> for UsageId {
-    fn from(hut: hut::Usage) -> UsageId {
-        UsageId::from(&hut)
-    }
-}
-
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]
 pub struct UsageMinimum(pub(crate) u32);
 
@@ -695,27 +649,5 @@ mod tests {
             let exponent = UnitExponent::from(v);
             assert_eq!(exponent.exponent(), expected);
         }
-    }
-
-    #[cfg(feature = "hut")]
-    #[test]
-    fn hut() {
-        let up = UsagePage::from(hut::UsagePage::GenericDesktop);
-        assert_eq!(u16::from(up), 0x1);
-
-        let up = UsagePage::from(&hut::UsagePage::GenericDesktop);
-        assert_eq!(u16::from(up), 0x1);
-
-        let u = UsagePage::from(hut::GenericDesktop::X.usage());
-        assert_eq!(u16::from(u), 0x1);
-
-        let u = UsagePage::from(&hut::GenericDesktop::X.usage());
-        assert_eq!(u16::from(u), 0x1);
-
-        let u = UsageId::from(hut::GenericDesktop::X.usage());
-        assert_eq!(u16::from(u), 0x30);
-
-        let u = UsageId::from(&hut::GenericDesktop::X.usage());
-        assert_eq!(u16::from(u), 0x30);
     }
 }

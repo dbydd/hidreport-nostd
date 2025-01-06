@@ -35,8 +35,7 @@ use alloc::borrow::ToOwned;
 use alloc::format;
 use alloc::string::String;
 use alloc::vec::Vec;
-#[cfg(feature = "hut")]
-use hut;
+
 use thiserror_no_std::Error;
 
 /// Convenience function to be extract a single bit as bool from a value
@@ -91,35 +90,6 @@ pub enum ItemType {
     Long,
     Reserved,
 }
-
-#[cfg(feature = "hut")]
-impl From<&hut::UsagePage> for ItemType {
-    fn from(hut: &hut::UsagePage) -> ItemType {
-        GlobalItem::UsagePage(UsagePage::from(hut)).into()
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<hut::UsagePage> for ItemType {
-    fn from(hut: hut::UsagePage) -> ItemType {
-        ItemType::from(&hut)
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<&hut::Usage> for ItemType {
-    fn from(hut: &hut::Usage) -> ItemType {
-        LocalItem::Usage(UsagePage::from(hut), UsageId::from(hut)).into()
-    }
-}
-
-#[cfg(feature = "hut")]
-impl From<hut::Usage> for ItemType {
-    fn from(hut: hut::Usage) -> ItemType {
-        ItemType::from(&hut)
-    }
-}
-
 impl From<MainItem> for ItemType {
     fn from(item: MainItem) -> ItemType {
         ItemType::Main(item)
